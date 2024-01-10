@@ -3,6 +3,10 @@ package com.cooksys.ftd.assignments.objects;
 import com.cooksys.ftd.assignments.objects.util.MissingImplementationException;
 
 public class SimplifiedRational implements IRational {
+
+    private int numerator;
+    private int denominator;
+
     /**
      * Determines the greatest common denominator for the given values
      *
@@ -11,8 +15,20 @@ public class SimplifiedRational implements IRational {
      * @return the greatest common denominator, or shared factor, of `a` and `b`
      * @throws IllegalArgumentException if a <= 0 or b < 0
      */
+//    The Euclidean algorithm is based on the observation that the GCD
+//    of two numbers does not change if the larger number is replaced
+//    by its remainder when divided by the smaller number. By repeatedly
+//    applying this rule, the algorithm eventually finds the GCD.
+//    O(Log min(a, b))
     public static int gcd(int a, int b) throws IllegalArgumentException {
-        throw new MissingImplementationException();
+
+        if (a <= 0 || b < 0) {
+            throw new IllegalArgumentException();
+        }
+        if (b == 0) { // the base case
+            return a;
+        }
+        return gcd(b, a % b);
     }
 
     /**
@@ -29,7 +45,19 @@ public class SimplifiedRational implements IRational {
      * @throws IllegalArgumentException if the given denominator is 0
      */
     public static int[] simplify(int numerator, int denominator) throws IllegalArgumentException {
-        throw new MissingImplementationException();
+        if (denominator == 0) {
+            throw new IllegalArgumentException();
+        }
+
+        int gcd = gcd(Math.abs(numerator), Math.abs(denominator));
+        int sign;
+        if ((numerator < 0 && denominator < 0) || (numerator >= 0 && denominator > 0)) {
+            sign = 1; // positive
+        } else {
+            sign = -1; // negative
+        }
+
+        return new int[]{sign * Math.abs(numerator) / gcd, Math.abs(denominator) / gcd};
     }
 
     /**
@@ -45,7 +73,12 @@ public class SimplifiedRational implements IRational {
      * @throws IllegalArgumentException if the given denominator is 0
      */
     public SimplifiedRational(int numerator, int denominator) throws IllegalArgumentException {
-        throw new MissingImplementationException();
+
+        if (denominator == 0) {
+            throw new IllegalArgumentException();
+        }
+        this.numerator = numerator;
+        this.denominator = denominator;
     }
 
     /**
@@ -53,7 +86,8 @@ public class SimplifiedRational implements IRational {
      */
     @Override
     public int getNumerator() {
-        throw new MissingImplementationException();
+
+        return numerator;
     }
 
     /**
@@ -61,7 +95,8 @@ public class SimplifiedRational implements IRational {
      */
     @Override
     public int getDenominator() {
-        throw new MissingImplementationException();
+
+        return denominator;
     }
 
     /**
@@ -77,20 +112,29 @@ public class SimplifiedRational implements IRational {
      */
     @Override
     public SimplifiedRational construct(int numerator, int denominator) throws IllegalArgumentException {
-        throw new MissingImplementationException();
+
+        if (denominator == 0) {
+            throw new IllegalArgumentException();
+        }
+        return new SimplifiedRational(numerator, denominator);
     }
 
     /**
      * @param obj the object to check this against for equality
-     * @return true if the given obj is a rational value and its
-     * numerator and denominator are equal to this rational value's numerator and denominator,
+     * @return true if the given obj is a Simplified rational value and its
+     * numerator and denominator are equal to this Simplified rational value's numerator and denominator,
      * false otherwise
      */
     @Override
     public boolean equals(Object obj) {
-        throw new MissingImplementationException();
-    }
 
+        if (obj instanceof SimplifiedRational) {
+            SimplifiedRational that = (SimplifiedRational) obj;
+            return this.numerator == that.numerator && this.denominator == that.denominator;
+        }
+        return false;
+    }
+//instanceOf()
     /**
      * If this is positive, the string should be of the form `numerator/denominator`
      * <p>
@@ -100,6 +144,11 @@ public class SimplifiedRational implements IRational {
      */
     @Override
     public String toString() {
-        throw new MissingImplementationException();
+        if ((numerator < 0 && denominator > 0) || (numerator > 0 && denominator < 0)) {
+            return "-" + Math.abs(numerator) + "/" + Math.abs(denominator);
+        } else {
+            return Math.abs(numerator) + "/" + Math.abs(denominator);
+        }
     }
+
 }
