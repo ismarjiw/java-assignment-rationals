@@ -46,19 +46,19 @@ public class SimplifiedRational implements IRational {
      */
     public static int[] simplify(int numerator, int denominator) throws IllegalArgumentException {
         if (denominator == 0) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("Denominator cannot be zero");
+        }
+
+        if (numerator == 0) {
+            return new int[]{0, 1};
         }
 
         int gcd = gcd(Math.abs(numerator), Math.abs(denominator));
-        int sign;
-        if ((numerator < 0 && denominator < 0) || (numerator >= 0 && denominator > 0)) {
-            sign = 1; // positive
-        } else {
-            sign = -1; // negative
-        }
+        int sign = (numerator * denominator >= 0) ? 1 : -1;
 
         return new int[]{sign * Math.abs(numerator) / gcd, Math.abs(denominator) / gcd};
     }
+
 
     /**
      * Constructor for rational values of the type:
@@ -75,11 +75,20 @@ public class SimplifiedRational implements IRational {
     public SimplifiedRational(int numerator, int denominator) throws IllegalArgumentException {
 
         if (denominator == 0) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("Denominator cannot be zero");
         }
-        this.numerator = numerator;
-        this.denominator = denominator;
+
+        if (numerator != 0) {
+            int[] simplified = simplify(numerator, denominator);
+            this.numerator = simplified[0];
+            this.denominator = simplified[1];
+        } else {
+            // Handle case where numerator is 0
+            this.numerator = 0;
+            this.denominator = 1;
+        }
     }
+
 
     /**
      * @return the numerator of this rational number
@@ -116,6 +125,7 @@ public class SimplifiedRational implements IRational {
         if (denominator == 0) {
             throw new IllegalArgumentException();
         }
+
         return new SimplifiedRational(numerator, denominator);
     }
 
@@ -127,14 +137,17 @@ public class SimplifiedRational implements IRational {
      */
     @Override
     public boolean equals(Object obj) {
-
         if (obj instanceof SimplifiedRational) {
             SimplifiedRational that = (SimplifiedRational) obj;
+
+            System.out.println(this.numerator + " " + that.numerator);
+            System.out.println(this.denominator + " " + that.denominator);
+
             return this.numerator == that.numerator && this.denominator == that.denominator;
         }
         return false;
     }
-//instanceOf()
+
     /**
      * If this is positive, the string should be of the form `numerator/denominator`
      * <p>
