@@ -1,7 +1,5 @@
 package com.cooksys.ftd.assignments.objects;
 
-import com.cooksys.ftd.assignments.objects.util.MissingImplementationException;
-
 public class SimplifiedRational implements IRational {
 
     private int numerator;
@@ -54,11 +52,9 @@ public class SimplifiedRational implements IRational {
         }
 
         int gcd = gcd(Math.abs(numerator), Math.abs(denominator));
-        int sign = (numerator * denominator >= 0) ? 1 : -1;
 
-        return new int[]{sign * Math.abs(numerator) / gcd, Math.abs(denominator) / gcd};
+        return new int[]{(numerator) / gcd, (denominator) / gcd};
     }
-
 
     /**
      * Constructor for rational values of the type:
@@ -72,23 +68,17 @@ public class SimplifiedRational implements IRational {
      * @param denominator the denominator of the rational value
      * @throws IllegalArgumentException if the given denominator is 0
      */
-    public SimplifiedRational(int numerator, int denominator) throws IllegalArgumentException {
 
+    public SimplifiedRational(int numerator, int denominator) throws IllegalArgumentException {
         if (denominator == 0) {
             throw new IllegalArgumentException("Denominator cannot be zero");
         }
 
-        if (numerator != 0) {
-            int[] simplified = simplify(numerator, denominator);
-            this.numerator = simplified[0];
-            this.denominator = simplified[1];
-        } else {
-            // Handle case where numerator is 0
-            this.numerator = 0;
-            this.denominator = 1;
-        }
-    }
+        int[] simplified = simplify(numerator, denominator);
+        this.numerator = simplified[0];
+        this.denominator = simplified[1];
 
+    }
 
     /**
      * @return the numerator of this rational number
@@ -139,9 +129,6 @@ public class SimplifiedRational implements IRational {
     public boolean equals(Object obj) {
         if (obj instanceof SimplifiedRational) {
             SimplifiedRational that = (SimplifiedRational) obj;
-
-            System.out.println(this.numerator + " " + that.numerator);
-            System.out.println(this.denominator + " " + that.denominator);
 
             return this.numerator == that.numerator && this.denominator == that.denominator;
         }
